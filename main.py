@@ -1,25 +1,32 @@
+# Import necessary modules from tkinter and random
 from tkinter import *
 from tkinter import Entry
 from tkinter import messagebox
-from random import choice, randint, shuffle
+from random import choice, shuffle
+
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
-    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-    numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-    symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
+               'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+               'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']  # List of letters
+    numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']  # List of numbers
 
-    password_letters =[choice(letters) for _ in range(randint(8, 10))]
-    password_symbols =[choice(symbols) for _ in range(randint(2, 4))]
-    password_numbers =[choice(numbers) for _ in range(randint(2, 4))]
+    # Generate password components
+    password_letters = [choice(letters) for _ in range(15)]
+    password_numbers = [choice(numbers) for _ in range(5)]
 
-    password_list = password_letters + password_numbers + password_symbols
+    # Combine password components
+    password_list = password_letters + password_numbers
 
-    shuffle(password_list)
+    shuffle(password_list)  # Shuffle the combined list
 
-    password = "".join(password_list)
-    # print(f"Your password is: {password}")
-    password_entry.insert(0,password)
+    password = "".join(password_list)  # Convert list to a string
+    formatted_password = '-'.join(
+        password[i:i + 5] for i in range(0, len(password), 5))  # Insert "-" every 5 characters
+    password_entry.delete(0, END)  # Clear any previous content
+    password_entry.insert(0, formatted_password)  # Insert the generated password into the entry
+
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save_data():
@@ -31,14 +38,15 @@ def save_data():
     elif len(password) == 0:
         messagebox.showinfo(title="Empty Field", message="Please make sure you fill in 'Password'")
     else:
-
-        is_ok = messagebox.askokcancel(title=website,message=f"These are the details entered: \n Email:{email},"
-                                                            f"\n Password:{password} \n is it ok to save?")
+        # Ask user for confirmation before saving
+        is_ok = messagebox.askokcancel(title=website, message=f"These are the details entered: \n Email:{email},"
+                                                              f"\n Password:{password} \n is it ok to save?")
         if is_ok:
+            # Open and write the details to a file
             with open("code.text", "a") as data_file:
                 data_file.write(f"{website} | {email} | {password}\n")
-                website_entry.delete(0,END)
-                password_entry.delete(0,END)
+                website_entry.delete(0, END)  # Clear website entry
+                password_entry.delete(0, END)  # Clear password entry
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -68,11 +76,11 @@ website_entry.focus()
 email_entry = Entry(width=38)
 email_entry.grid(row=2, column=1, columnspan=2)
 email_entry.insert(END, "@email.com")
-password_entry: Entry = Entry(width=21,)
+password_entry: Entry = Entry(width=21, )
 password_entry.grid(row=3, column=1)
 
 # Buttons
-generate_password_button = Button(text="Generate Password",command=generate_password)
+generate_password_button = Button(text="Generate Password", command=generate_password)
 generate_password_button.grid(row=3, column=2, columnspan=2)
 add_button = Button(text="Add", width=36, command=save_data)
 add_button.grid(row=4, column=1, columnspan=2)
