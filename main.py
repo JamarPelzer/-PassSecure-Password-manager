@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import Entry
 from tkinter import messagebox
 from random import choice, shuffle
+import pyperclip
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
@@ -26,6 +27,7 @@ def generate_password():
         password[i:i + 5] for i in range(0, len(password), 5))  # Insert "-" every 5 characters
     password_entry.delete(0, END)  # Clear any previous content
     password_entry.insert(0, formatted_password)  # Insert the generated password into the entry
+    pyperclip.copy(formatted_password)
 
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
